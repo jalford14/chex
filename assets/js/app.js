@@ -15,7 +15,8 @@ Hooks.MoveMade = {
     this.el.addEventListener("change", e => {
       const { value } = e.detail;
       console.log('change');
-      this.pushEvent("board-update", {new_position: value})
+      const newPosFen = objToFen(value)
+      this.pushEvent("board-update", {new_position: newPosFen})
     });
   },
 }

@@ -7,8 +7,8 @@ defmodule ChexWeb.BoardLive do
   end
 
   @impl true
-  def handle_event("board-update", value, socket) do
-    {:noreply, assign(socket, position: value)}
+  def handle_event("board-update", %{"new_position" => fen}, socket) do
+    {:noreply, assign(socket, position: fen)}
   end
 
   def render(assigns) do

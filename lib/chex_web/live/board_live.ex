@@ -3,26 +3,24 @@ defmodule ChexWeb.BoardLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+    {:ok, assign(socket, position: "start")}
   end
 
   @impl true
-  def handle_event("suggest", %{"q" => query}, socket) do
-    {:noreply, assign(socket, results: search(query), query: query)}
+  def handle_event("MoveMade", _value, socket) do
+    {:noreply, assign(socket, position: "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R")}
   end
 
-  @impl true
-  def handle_event("search", %{"q" => query}, socket) do
-    case search(query) do
-      %{^query => vsn} ->
-        {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
-
-      _ ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "No dependencies found matching \"#{query}\"")
-         |> assign(results: %{}, query: query)}
-    end
+  def render(assigns) do
+    ~L"""
+    <chess-board
+        id="board"
+        phx-hook="MoveMade"
+        style="width: 600px; margin: auto;"
+        position="<%= @position %>"
+        draggable-pieces>
+    </chess-board>
+    """
   end
 
   defp search(query) do

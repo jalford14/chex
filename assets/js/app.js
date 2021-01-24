@@ -1,9 +1,10 @@
 import "../css/app.scss"
 
 import "phoenix_html"
-import {Socket} from "phoenix"
+import { Socket } from "phoenix"
 import NProgress from "nprogress"
-import {LiveSocket} from "phoenix_live_view"
+import { LiveSocket } from "phoenix_live_view"
+import { objToFen } from "chessboard-element"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
@@ -11,10 +12,10 @@ let Hooks = {}
 
 Hooks.MoveMade = {
   mounted() {
-    console.log("mounted")
     this.el.addEventListener("change", e => {
-      const {value, oldValue} = e.detail;
+      const { value } = e.detail;
       console.log('change');
+      this.pushEvent("board-update", {new_position: value})
     });
   },
 }

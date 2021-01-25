@@ -12,7 +12,7 @@ defmodule Chex.Application do
       # Start the Telemetry supervisor
       ChexWeb.Telemetry,
       # Start the PubSub system
-      {Phoenix.PubSub, name: Chex.PubSub},
+      {Phoenix.PubSub, [name: Chex.PubSub, adapter: Phoenix.PubSub.PG2]},
       # Start the Endpoint (http/https)
       ChexWeb.Endpoint
       # Start a worker by calling: Chex.Worker.start_link(arg)

@@ -1,14 +1,24 @@
 defmodule ChexWeb.BoardLive do
   use ChexWeb, :live_view
 
+  @topic "game"
+
   @impl true
   def mount(_params, _session, socket) do
+    ChexWeb.Endpoint.subscribe(@topic)
     {:ok, assign(socket, position: "start")}
   end
 
   @impl true
   def handle_event("board-update", %{"new_position" => fen}, socket) do
-    {:noreply, assign(socket, position: fen)}
+    state = %{position: fen}
+    ChexWeb.Endpoint.broadcast_from(self(), @topic, fen, state)
+    {:noreply, assign(socket, state)}
+  end
+
+  @impl true
+  def handle_info(%{topic: @topic, payload: state}, socket) do
+    {:noreply, assign(socket, state)}
   end
 
   def render(assigns) do
@@ -21,17 +31,5 @@ defmodule ChexWeb.BoardLive do
         draggable-pieces>
     </chess-board>
     """
-  end
-
-  defp search(query) do
-    if not ChexWeb.Endpoint.config(:code_reloader) do
-      raise "action disabled when not in development"
-    end
-
-    for {app, desc, vsn} <- Application.started_applications(),
-        app = to_string(app),
-        String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
-        into: %{},
-        do: {app, vsn}
   end
 end

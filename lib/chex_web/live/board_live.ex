@@ -17,6 +17,11 @@ defmodule ChexWeb.BoardLive do
   end
 
   @impl true
+  def handle_event("reset", _value, socket) do
+    {:noreply, assign(socket, position: "start")}
+  end
+
+  @impl true
   def handle_info(%{topic: @topic, payload: state}, socket) do
     {:noreply, assign(socket, state)}
   end
@@ -30,6 +35,10 @@ defmodule ChexWeb.BoardLive do
         position="<%= @position %>"
         draggable-pieces>
     </chess-board>
+    <button
+        phx-click="reset">
+      Reset
+    </button>
     """
   end
 end

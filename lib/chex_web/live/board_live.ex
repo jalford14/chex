@@ -28,17 +28,17 @@ defmodule ChexWeb.BoardLive do
 
   def render(assigns) do
     ~L"""
-    <chess-board
-        id="board"
-        phx-hook="MoveMade"
-        style="width: 600px; margin: auto;"
-        position="<%= @position %>"
-        draggable-pieces>
-    </chess-board>
     <button
         phx-click="reset">
       Reset
     </button>
+    <chess-board
+        id="board"
+        phx-hook="MoveMade"
+        style="width: 100%; margin: auto;"
+        position="<%= @position %>"
+        draggable-pieces>
+    </chess-board>
     """
   end
 end

@@ -17,7 +17,8 @@ defmodule ChexWeb.Router do
   scope "/", ChexWeb do
     pipe_through :browser
 
-    live "/", BoardLive, :index
+    get "/", NewGameController, :index
+    # live "/", BoardLive, :index
   end
 
   if Mix.env() in [:dev, :test] do

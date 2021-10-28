@@ -18,6 +18,7 @@ defmodule ChexWeb.Router do
     pipe_through :browser
 
     get "/", NewGameController, :index
+    get "/new", NewGameController, :create
     # live "/", BoardLive, :index
   end
 

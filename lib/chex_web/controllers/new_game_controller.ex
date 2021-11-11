@@ -8,9 +8,9 @@ defmodule ChexWeb.NewGameController do
   def create(conn, _params) do
     case Chex.Game.create_game do
       {:ok, id} ->
-        render(conn, "board.html", id: id)
+        redirect(conn, to: "/game/#{id}")
       {:error, changeset} ->
-        #render(conn, "errorplaceholder")
+        render(conn, "errorplaceholder: #{changeset}")
     end
   end
 end

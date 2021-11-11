@@ -19,7 +19,7 @@ defmodule ChexWeb.Router do
 
     get "/", NewGameController, :index
     get "/new", NewGameController, :create
-    # live "/", BoardLive, :index
+    live "/game/:game_id", BoardLive
   end
 
   if Mix.env() in [:dev, :test] do

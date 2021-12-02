@@ -4,15 +4,14 @@ defmodule ChexWeb.BoardLive do
   alias Chex.Repo
   alias Chex.Game
 
-  @topic "game"
-
   @impl true
   def mount(%{"game_id" => game_id} = params, _session, socket) do
-    ChexWeb.Endpoint.subscribe(@topic)
+    topic = "game-#{game_id}"
+    ChexWeb.Endpoint.subscribe(topic)
 
     case Repo.get(Game, game_id) do
       game ->
-        {:ok, assign(socket, position: List.last(game.positions))}
+        {:ok, assign(socket, position: List.last(game.positions), topic: topic)}
 
       nil ->
         {:ok, assign(socket, error: "can't find game")}
@@ -22,10 +21,10 @@ defmodule ChexWeb.BoardLive do
   @impl true
   def handle_event("board-update", %{"new_position" => fen}, socket) do
     state = %{position: fen}
-    # Currently, we can create a new game and read it's position
+    # Currently, we can create a new game and read its position
     # We need to leverage this function to update the game with each new
     # position when the 'board-update' event occurs
-    ChexWeb.Endpoint.broadcast_from(self(), @topic, fen, state)
+    ChexWeb.Endpoint.broadcast_from(self(), socket.assigns[:topic], fen, state)
     {:noreply, assign(socket, state)}
   end
 
@@ -35,7 +34,7 @@ defmodule ChexWeb.BoardLive do
   end
 
   @impl true
-  def handle_info(%{topic: @topic, payload: state}, socket) do
+  def handle_info(%{payload: state}, socket) do
     {:noreply, assign(socket, state)}
   end
 
